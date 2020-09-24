@@ -18,7 +18,14 @@ contenida([X|T], W) :- pertenece(X, W), contenida(T, W).
 sublista(Z, X) :- prefijo(Z, X).
 sublista([_|T], X) :- prefijo(T, X).
 
+permutacion([], []).
 permutacion([X|Y], Z) :- permutacion(Y, W), elegir(X,Z,W).
+
+arreglo(L, N, X) :- combinacion(L, N, W), permutacion(W, X).
+
+arreglo_con_repeticion(_, 0, []).
+arreglo_con_repeticion([H|T], N, [H|Tp]) :- N>0, Np is N-1, arreglo_con_repeticion([H|T], Np, Tp).
+arreglo_con_repeticion([_|T], N, X) :- N>0, arreglo_con_repeticion(T, N, X).
 
 combinacion([], _, []).
 combinacion([H|W], N, [H|T]) :- Z is N-1, combinacion(W, Z, T), largo(T, Z).
