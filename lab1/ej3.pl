@@ -1,11 +1,11 @@
 %
-es_afd(af(Q,S,F)) :- estados(Q), simbolos(S), finales(F,Q).
+es_afd(af(Q,S,F, Delta)) :- estados(Q), simbolos(S), finales(F,Q), delta_afd(Q, Delta).
 
 %
-es_afnd(af(Q,S,F)) :- estados(Q), simbolos(S), finales(F,Q).
+es_afnd(af(Q,S,F, Delta)) :- estados(Q), simbolos(S), finales(F,Q), delta_afnd(Q, Delta).
 
 %
-es_afnd_eps(af(Q,S,F)) :- estados(Q), simbolos(S), finales(F,Q).
+es_afnd_eps(af(Q,S,F, Delta)) :- estados(Q), simbolos(S), finales(F,Q), delta_afnd_eps(Q, Delta).
 
 %
 % reconoce(af,w)
@@ -21,7 +21,7 @@ estados_sin_cero([H]) :- number(H), H > 0.
 estados_sin_cero([H|T]) :- number(H), H > 0, no_pertenece(H,T), estados_sin_cero(T).
 
 % simbolos(S)
-simbolos([H|[]]).
+simbolos([_|[]]).
 simbolos([H|T]) :- no_pertenece(H,T), simbolos(T).
 
 % finales(F, Q)
@@ -29,9 +29,39 @@ simbolos([H|T]) :- no_pertenece(H,T), simbolos(T).
 finales(F, Q) :- contenida(F, Q).
 
 %
-% delta_afd().
-% delta_afnd().
-% delta_afnd_eps().
+delta_afd(_Q, []).
+delta_afd(Q, [d(O, D, Sym)|T]) :-
+  pertenece(O,Q),
+  pertenece(D,Q),
+  Sym \= epsilon,
+  atom(Sym),
+  es_transicion_determinista([d(O, D, Sym)|T]),
+  delta_afd(Q, T).
+
+es_transicion_determinista([_]).
+es_transicion_determinista([d(O, _D, S)|T]) :-
+  origenesSimbolos(T, OrigenesSimbolos),
+  no_pertenece(os(O,S), OrigenesSimbolos).
+
+origenesSimbolos([],[]).
+origenesSimbolos([d(O, _D, S) | T], [os(O,S)|TO]) :- origenesSimbolos(T,TO).
+
+delta_afnd(_Q, []).
+delta_afnd(Q, [d(O, D, Sym)|T]) :- 
+  pertenece(O,Q),
+  pertenece(D,Q),
+  Sym \= epsilon,
+  atom(Sym),
+  delta_afnd(Q, T).
+
+
+delta_afnd_eps(_Q, []).
+delta_afnd_eps(Q, [d(O, D, Sym)|T]) :-
+  pertenece(O,Q),
+  pertenece(D,Q),
+  atom(Sym),
+  delta_afnd_eps(Q, T).
+
 
 % Metodos Auxiliares (para listas)
 
