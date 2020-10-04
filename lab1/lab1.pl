@@ -68,15 +68,22 @@ recorrido_caballo(TT, Numero_movimientos, Casillas_prohibidas, Recorrido) :-
 
 % Metodos Auxiliares - Ejercicio 2
 
+
+% sin_repetidos(+L).
+% Verifica que una lista no tenga repetidos
 sin_repetidos([]).
 sin_repetidos([H|T]) :- no_pertenece(H,T), sin_repetidos(T).
 
+% casilla_valida(+C, +TT)
+% Verifica que, dado un tablero y una casilla, la última este dentro del tablero
 casilla_valida(c(X,Y),TT) :-
   TT >= X,
   TT >= Y,
   X  >  0,
   Y  >  0.
 
+% movimiento_valido(+CO, ?CD, +TT)
+% Verifica que un movimiento con casilla de origen CO y casilla de origen CD sea válido para el tablero de tamaño TT
 movimiento_valido(c(X1,Y1), c(X2,Y2), TT) :- 
   (
      X2 is  X1 - 2,
@@ -108,15 +115,16 @@ movimiento_valido(c(X1,Y1), c(X2,Y2), TT) :-
     casilla_valida(c(X2,Y2), TT)
   ).
 
+% recorrido_caballo_auxiliar(+TT, +Numero_movimientos, +Casillas_prohibidas, ?Recorrido_parcial, ?RecorridoTotal).
+% Predicado auxiliar para mentener el recorrido final y verificar el no repetir casillas,
+% mientras se mantiene un recorrido parcial que representa el recorrido restante sobre el que se hace la recursión.
+
+% paso base, sin movimientos restantes, el resto de los movimientos es la lista vacía
 recorrido_caballo_auxiliar(_1, 0, _3, [_4|Resto], _5):-Resto=[].
 
-recorrido_caballo_auxiliar(TT, 1, Casillas_prohibidas, [Casilla_actual | c(X,Y)], Recorrido) :-
-  movimiento_valido(Casilla_actual, c(X,Y), TT),
-  no_pertenece(c(X,Y), Casillas_prohibidas),
-  sin_repetidos(Recorrido).
-
+% paso inductivo, se instancia un movmiento válido de los posibles, se verifica que no pertenezca a las casillas prohibidas,
+% se verifica que la casilla no exista en lo que va del recorrido, se resta uno a los movimientos y se invoca la recusión.
 recorrido_caballo_auxiliar(TT, Numero_movimientos, Casillas_prohibidas, [Casilla_actual | [c(X,Y) | Resto]], Recorrido) :-
-  Numero_movimientos > 0,
   movimiento_valido(Casilla_actual, c(X,Y), TT),
   no_pertenece(c(X,Y), Casillas_prohibidas),
   sin_repetidos(Recorrido),
