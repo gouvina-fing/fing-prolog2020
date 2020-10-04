@@ -1,3 +1,131 @@
+% EJERCICIO 1
+% --------------------------------------------------------------------
+
+% largo(+L, ?N)
+% Retorna el largo de la lista L
+largo([],0).
+largo([_|T],L1):- largo(T,L2),L1 is L2+1.
+
+% pertenece(?X, ?L)
+% El elemento X pertenece a la lista L
+pertenece(X,[X|_]).
+pertenece(X,[_|T]):- pertenece(X,T).
+
+% no_pertenece(+X, +L)
+% El elemento X no pertenece a la lista L
+no_pertenece(_,[]).
+no_pertenece(X,[Y]):-X\=Y.
+no_pertenece(X,[Y|T]):-X\=Y,no_pertenece(X,T).
+
+% elegir(?X, ?L1, ?L2)
+% La lista L2 resulta de eliminiar un elemento de la lista L1
+elegir(X, [X|T], T).
+elegir(X, [Z|T], [Z|O]) :- elegir(X, T, O).
+
+% contenida(+L1, +L2)
+% Todos los elementos de L1 pertenecen a L2
+contenida([], [_X|_Y]).
+contenida([X|T], W) :- pertenece(X, W), contenida(T, W).
+
+% sublista(+L, ?Sub)
+% Sub contiene un subcopenjunto de elementos contiguos de L en el mismo orden que aparecen en L
+sublista(Z, X) :- prefijo(Z, X).
+sublista([_|T], X) :- prefijo(T, X).
+
+% permutacion(+L1, ?L2)
+% La lista L2 es una permutacion de la lista L1, el cual no tiene repetidos
+permutacion([], []).
+permutacion([X|Y], Z) :- permutacion(Y, W), elegir(X,Z,W).
+
+% arreglo(+L1, +N, ?L2)
+% La lista L2 es un arreglo de N elementos de la lista L1
+arreglo(L, N, X) :- combinacion(L, N, W), permutacion(W, X).
+
+% arreglo_con_repeticion(+L1, +N, ?L2)
+% La lista L2 es un arreglo con repeticion de N elementos de la lista L1
+arreglo_con_repeticion(_, 0, []).
+arreglo_con_repeticion(L, N, [H|T]) :- N>0, Np is N-1, pertenece(H, L), arreglo_con_repeticion(L, Np, T).
+
+% combinacion(+L1, +N, -L2)
+% La lista L2 es una combinacion de N elementos de la lista L1.
+combinacion([], _, []).
+combinacion([H|W], N, [H|T]) :- Z is N-1, combinacion(W, Z, T), largo(T, Z).
+combinacion([_|T], N, X) :- combinacion(T, N, X), largo(X, N).
+
+% Metodos Auxiliares - Ejercicio 1
+
+% prefijo(+L1, ?L2)
+% L2 es prefijo de L1
+prefijo(_,[]).
+prefijo([H|T],[Hp|Tp]):-H=Hp,prefijo(T,Tp).
+
+% EJERCICIO 2 
+% --------------------------------------------------------------------
+
+recorrido_caballo(TT, Numero_movimientos, Casillas_prohibidas, Recorrido) :-
+  recorrido_caballo_auxiliar(TT, Numero_movimientos, Casillas_prohibidas, [c(1,2) | Resto], [c(1,2) | Resto]),
+  Recorrido = [c(1,2) | Resto].
+
+% Metodos Auxiliares - Ejercicio 2
+
+sin_repetidos([]).
+sin_repetidos([H|T]) :- no_pertenece(H,T), sin_repetidos(T).
+
+casilla_valida(c(X,Y),TT) :-
+  TT >= X,
+  TT >= Y,
+  X  >  0,
+  Y  >  0.
+
+movimiento_valido(c(X1,Y1), c(X2,Y2), TT) :- 
+  (
+     X2 is  X1 - 2,
+     Y2 is  Y1 - 1
+    ;
+     X2 is  X1 - 2,
+     Y2 is  Y1 + 1
+    ;
+     X2 is  X1 + 2,
+     Y2 is  Y1 - 1
+    ;
+     X2 is  X1 + 2,
+     Y2 is  Y1 + 1
+    ;
+     X2 is  X1 - 1,
+     Y2 is  Y1 - 2
+    ;
+     X2 is  X1 - 1,
+     Y2 is  Y1 + 2
+    ;
+     X2 is  X1 + 1,
+     Y2 is  Y1 - 2
+    ;
+     X2 is  X1 + 1,
+     Y2 is  Y1 + 2
+  ),
+  (
+    casilla_valida(c(X1,Y1), TT),
+    casilla_valida(c(X2,Y2), TT)
+  ).
+
+recorrido_caballo_auxiliar(_1, 0, _3, [_4|Resto], _5):-Resto=[].
+
+recorrido_caballo_auxiliar(TT, 1, Casillas_prohibidas, [Casilla_actual | c(X,Y)], Recorrido) :-
+  movimiento_valido(Casilla_actual, c(X,Y), TT),
+  no_pertenece(c(X,Y), Casillas_prohibidas),
+  sin_repetidos(Recorrido).
+
+recorrido_caballo_auxiliar(TT, Numero_movimientos, Casillas_prohibidas, [Casilla_actual | [c(X,Y) | Resto]], Recorrido) :-
+  Numero_movimientos > 0,
+  movimiento_valido(Casilla_actual, c(X,Y), TT),
+  no_pertenece(c(X,Y), Casillas_prohibidas),
+  sin_repetidos(Recorrido),
+  Restantes is Numero_movimientos - 1,
+  recorrido_caballo_auxiliar(TT, Restantes, Casillas_prohibidas, [c(X,Y) | Resto], Recorrido).
+
+% EJERCICIO 3
+% --------------------------------------------------------------------
+
 % Determina si af es un afd
 es_afd(af(Q,S,F, Delta)) :- estados(Q), simbolos(S), finales(F,Q), delta_afd(Q, S, Delta).
 
@@ -11,6 +139,8 @@ es_afnd_eps(af(Q,S,F, Delta)) :- estados(Q), simbolos(S), finales(F,Q), delta_af
 reconoce(af(Q,S,F,Delta), W) :- es_afd(af(Q,S,F,Delta)), reconoce_no_eps(af(Q,S,F,Delta), W).
 reconoce(af(Q,S,F,Delta), W) :- es_afnd(af(Q,S,F,Delta)), reconoce_no_eps(af(Q,S,F,Delta), W).
 reconoce(af(Q,S,F,Delta), W) :- es_afnd_eps(af(Q,S,F,Delta)), reconoce_eps(af(Q,S,F,Delta), W).
+
+% Metodos Auxiliares - Ejercicio 3
 
 % Metodos Auxiliares (para reconocimiento)
 
@@ -31,7 +161,7 @@ reconoce_eps(af(Q,S,F,Delta), [H|T]) :- pertenece(d(0,Y,epsilon), Delta), recono
 % reconoce_eps_siguiente es recursivo y va consumiendo de la tira. Tiene como parametro adicional el siguiente estado, para hacer avanzar tira y estado
 % -- Tira completamente consumida. Si no se llega a estado final, se avanza a caso borde con reconcoe_eps_final
 reconoce_eps_siguiente(af(Q,S,F,Delta), [], X) :- pertenece(d(X,Y,epsilon), Delta), pertenece(Y,F). % Caso 1 epsilon al final
-reconoce_eps_siguiente(af(Q,S,F,Delta), [], X) :- pertenece(d(X,Y,epsilon), Delta), reconoce_eps_final(af(Q,S,F,Delta), Y). % Caso 1+ epsilon al final
+reconoce_eps_siguiente(af(Q,S,F,Delta), [], X) :- pertenece(d(X,Y,epsilon), Delta), reconoce_eps_final(af(Q,S,F,Delta), Y). % Caso 2+ epsilon al final
 % -- Tira con un solo simbolo por consumir
 reconoce_eps_siguiente(af(Q,S,F,Delta), [H], X) :- pertenece(d(X,Y,H), Delta), pertenece(Y,F). % Caso sin epsilon final, 1 elemento (2 originales)
 reconoce_eps_siguiente(af(Q,S,F,Delta), [H], X) :- pertenece(d(X,Y,H), Delta), reconoce_eps_siguiente(af(Q,S,F,Delta), [], Y). % Caso sin epsilon intermedio, 2+ elementos (3+ originales)
@@ -42,7 +172,6 @@ reconoce_eps_siguiente(af(Q,S,F,Delta), [H|T], X) :- pertenece(d(X,Y,epsilon), D
 % reconoce_eps_final controla si se consumió toda la tira pero hay un camino de largo finito hasta un estado final a través de transiciones epsilon
 reconoce_eps_final(af(Q,S,F,[d(X,Y,epsilon)|T]), X) :- pertenece(Y,F). % Caso 1 epsilon al final
 reconoce_eps_final(af(Q,S,F,[d(X,Y,epsilon)|T]), X) :- reconoce_eps_final(af(Q,S,F,T), Y). % Caso 2+ epsilon al final
-
 
 % Metodos Auxiliares (para automatas)
 
@@ -56,8 +185,8 @@ estados_sin_cero([H|T]) :- integer(H), H > 0, no_pertenece(H,T), estados_sin_cer
 
 % simbolos(+S)
 % Comprueba si la lista de simbolos S contiene elementos atómicos sin repetir
-simbolos([_|[]]).
-simbolos([H|T]) :- no_pertenece(H,T), simbolos(T).
+simbolos([H]) :- H\=epsilon.
+simbolos([H|T]) :- H\=epsilon, no_pertenece(H,T), simbolos(T).
 
 % finales(+F, +Q)
 % Comprueba si la lista de estados F se encuentra contenida en la lista de estados Q
@@ -100,21 +229,3 @@ delta_afnd_eps(Q, S, [d(O, D, Sym)|T]) :-
   pertenece(D,Q),
   (pertenece(Sym,S); Sym = epsilon),
   delta_afnd_eps(Q, S, T).
-
-
-% Metodos Auxiliares (para listas)
-
-% pertence(?X, ?L)
-% El elemento X pertence a la lista L
-pertenece(X,[X|_]).
-pertenece(X,[_|T]):- pertenece(X,T).
-
-% no_pertence(+X, +L)
-% El elemento X no pertence a la lista L
-no_pertenece(_,[]).
-no_pertenece(X,[Y|T]):-X\=Y,no_pertenece(X,T).
-
-% contenida(+L1, +L2)
-% Todos los elementos de L1 pertencen a L2
-contenida([], [_X|_Y]).
-contenida([X|T], W) :- pertenece(X, W), contenida(T, W).
