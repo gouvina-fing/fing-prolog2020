@@ -18,7 +18,7 @@ no_pertenece(X,[Y]):-X\=Y.
 no_pertenece(X,[Y|T]):-X\=Y,no_pertenece(X,T).
 
 % elegir(?X, ?L1, ?L2)
-% La lista L2 resulta de eliminiar un elemento de la lista L1
+% La lista L2 resulta de eliminar un elemento de la lista L1
 elegir(X, [X|T], T).
 elegir(X, [Z|T], [Z|O]) :- elegir(X, T, O).
 
@@ -57,7 +57,7 @@ combinacion([_|T], N, X) :- combinacion(T, N, X), largo(X, N).
 % prefijo(+L1, ?L2)
 % L2 es prefijo de L1
 prefijo(_,[]).
-prefijo([H|T],[Hp|Tp]):-H=Hp,prefijo(T,Tp).
+prefijo([H|T],[Hp|Tp]) :- H=Hp,prefijo(T,Tp).
 
 % EJERCICIO 2 
 % --------------------------------------------------------------------
