@@ -202,11 +202,16 @@ delta_afd(Q, S, [d(O, D, Sym)|T]) :-
   es_transicion_determinista([d(O, D, Sym)|T]),
   delta_afd(Q, S, T).
 
+% es_transicion_determinista(+Lista)
+% Comprueba que una serie de transiciones conforman las aristas de un AFD (no hay 2 transiciones conmismo origen y Simbolo de transición)
 es_transicion_determinista([_]).
 es_transicion_determinista([d(O, _D, S)|T]) :-
   origenesSimbolos(T, OrigenesSimbolos),
   no_pertenece(os(O,S), OrigenesSimbolos).
 
+
+% origenesSimbolos(+Transiciones, ?OrigenesSimbolos)
+% Mapea la lista Transiciones a la lista de tuplas OrigenesSimbolos con forma os(Origen, Simbolo)
 origenesSimbolos([],[]).
 origenesSimbolos([d(O, _D, S)|T], [os(O,S)|TO]) :- origenesSimbolos(T,TO).
 
