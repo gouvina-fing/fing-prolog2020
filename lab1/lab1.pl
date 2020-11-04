@@ -14,7 +14,7 @@ pertenece(X,[_|T]):- pertenece(X,T).
 % no_pertenece(+X, +L)
 % El elemento X no pertenece a la lista L
 no_pertenece(_,[]).
-no_pertenece(X,[Y|T]) :- not(X == Y), no_pertenece(X,T).
+no_pertenece(X,[Y|T]) :- X \= Y, no_pertenece(X,T).
 
 % elegir(?X, ?L1, ?L2)
 % La lista L2 resulta de eliminar un elemento de la lista L1
@@ -66,7 +66,7 @@ recorrido_caballo(TT, N, Casillas_prohibidas, Recorrido) :-
   recorrido_caballo_auxiliar(TT, N, c(1,2), [c(1,2)|Casillas_prohibidas], Recorrido).
 
 % Si no ha más movimientos, la casilla restante debe ser la casilla actual.
-recorrido_caballo_auxiliar(TT, 0, Casilla_Final, _, [Casilla_Final]).
+recorrido_caballo_auxiliar(_TT, 0, Casilla_Final, _, [Casilla_Final]).
 
 % La casilla actual es la primera en la lista de movimientos restantes.
 recorrido_caballo_auxiliar(TT, N1, Casilla_actual, Casillas_prohibidas, [Casilla_actual | Resto]) :-
@@ -145,31 +145,31 @@ reconoce(af(Q,S,F,Delta), W) :- es_afnd_eps(af(Q,S,F,Delta)), reconoce_eps(af(Q,
 
 % Caso afd y afnd: se usan 2 predicados
 % reconoce_no_eps controla que el primer símbolo se consuma en el primer estado
-reconoce_no_eps(af(Q,S,F,Delta), [H]) :- pertenece(d(0,Y,H), Delta), pertenece(Y,F).
+reconoce_no_eps(af(_,_,F,Delta), [H]) :- pertenece(d(0,Y,H), Delta), pertenece(Y,F).
 reconoce_no_eps(af(Q,S,F,Delta), [H|T]) :- pertenece(d(0,Y,H), Delta), reconoce_no_eps_siguiente(af(Q,S,F,Delta), T, Y).
 % reconoce_no_eps_siguiente es recursivo y va consumiendo de la tira. Tiene como parametro adicional el siguiente estado, para hacer avanzar tira y estado
-reconoce_no_eps_siguiente(af(Q,S,F,Delta), [H], X) :- pertenece(d(X,Y,H), Delta), pertenece(Y,F).
+reconoce_no_eps_siguiente(af(_Q,_,F,Delta), [H], X) :- pertenece(d(X,Y,H), Delta), pertenece(Y,F).
 reconoce_no_eps_siguiente(af(Q,S,F,Delta), [H|T], X) :- pertenece(d(X,Y,H), Delta), reconoce_no_eps_siguiente(af(Q,S,F,Delta), T, Y).
 
 % Caso afnd_eps: se usan 3 predicados
 % reconoce_eps controla que el primer símbolo se consuma en el primer estado, y agrega la posibilidad de transiciones epsilon antes de consumir el primer símbolo
-reconoce_eps(af(Q,S,F,Delta), [H]) :- pertenece(d(0,Y,H), Delta), pertenece(Y,F). % Caso sin epsilon, 1 elemento
+reconoce_eps(af(_,_,F,Delta), [H]) :- pertenece(d(0,Y,H), Delta), pertenece(Y,F). % Caso sin epsilon, 1 elemento
 reconoce_eps(af(Q,S,F,Delta), [H]) :- pertenece(d(0,Y,epsilon), Delta), reconoce_eps_siguiente(af(Q,S,F,Delta), [H], Y). % Caso epsilon al principio, 1 elemento
 reconoce_eps(af(Q,S,F,Delta), [H|T]) :- pertenece(d(0,Y,H), Delta), reconoce_eps_siguiente(af(Q,S,F,Delta), T, Y). % Caso sin epsilon, 2+ elementos
 reconoce_eps(af(Q,S,F,Delta), [H|T]) :- pertenece(d(0,Y,epsilon), Delta), reconoce_eps_siguiente(af(Q,S,F,Delta), [H|T], Y). % Caso epsilon al principio, 2+ elementos
 % reconoce_eps_siguiente es recursivo y va consumiendo de la tira. Tiene como parametro adicional el siguiente estado, para hacer avanzar tira y estado
 % -- Tira completamente consumida. Si no se llega a estado final, se avanza a caso borde con reconcoe_eps_final
-reconoce_eps_siguiente(af(Q,S,F,Delta), [], X) :- pertenece(d(X,Y,epsilon), Delta), pertenece(Y,F). % Caso 1 epsilon al final
+reconoce_eps_siguiente(af(_Q,_,F,Delta), [], X) :- pertenece(d(X,Y,epsilon), Delta), pertenece(Y,F). % Caso 1 epsilon al final
 reconoce_eps_siguiente(af(Q,S,F,Delta), [], X) :- pertenece(d(X,Y,epsilon), Delta), reconoce_eps_final(af(Q,S,F,Delta), Y). % Caso 2+ epsilon al final
 % -- Tira con un solo simbolo por consumir
-reconoce_eps_siguiente(af(Q,S,F,Delta), [H], X) :- pertenece(d(X,Y,H), Delta), pertenece(Y,F). % Caso sin epsilon final, 1 elemento (2 originales)
+reconoce_eps_siguiente(af(_,_,F,Delta), [H], X) :- pertenece(d(X,Y,H), Delta), pertenece(Y,F). % Caso sin epsilon final, 1 elemento (2 originales)
 reconoce_eps_siguiente(af(Q,S,F,Delta), [H], X) :- pertenece(d(X,Y,H), Delta), reconoce_eps_siguiente(af(Q,S,F,Delta), [], Y). % Caso sin epsilon intermedio, 2+ elementos (3+ originales)
 reconoce_eps_siguiente(af(Q,S,F,Delta), [H], X) :- pertenece(d(X,Y,epsilon), Delta), reconoce_eps_siguiente(af(Q,S,F,Delta), [H], Y). % Caso con epsilon intermedio, 2+ elementos (3+ originales)
 % -- Tira con más de un simbolo por consumir
 reconoce_eps_siguiente(af(Q,S,F,Delta), [H|T], X) :- pertenece(d(X,Y,H), Delta), reconoce_eps_siguiente(af(Q,S,F,Delta), T, Y).
 reconoce_eps_siguiente(af(Q,S,F,Delta), [H|T], X) :- pertenece(d(X,Y,epsilon), Delta), reconoce_eps_siguiente(af(Q,S,F,Delta), [H|T], Y).
 % reconoce_eps_final controla si se consumió toda la tira pero hay un camino de largo finito hasta un estado final a través de transiciones epsilon
-reconoce_eps_final(af(Q,S,F,[d(X,Y,epsilon)|T]), X) :- pertenece(Y,F). % Caso 1 epsilon al final
+reconoce_eps_final(af(_Q,_S,F,[d(X,Y,epsilon)|_T]), X) :- pertenece(Y,F). % Caso 1 epsilon al final
 reconoce_eps_final(af(Q,S,F,[d(X,Y,epsilon)|T]), X) :- reconoce_eps_final(af(Q,S,F,T), Y). % Caso 2+ epsilon al final
 
 % Metodos Auxiliares (para automatas)
@@ -202,11 +202,16 @@ delta_afd(Q, S, [d(O, D, Sym)|T]) :-
   es_transicion_determinista([d(O, D, Sym)|T]),
   delta_afd(Q, S, T).
 
+% es_transicion_determinista(+Lista)
+% Comprueba que una serie de transiciones conforman las aristas de un AFD (no hay 2 transiciones conmismo origen y Simbolo de transición)
 es_transicion_determinista([_]).
 es_transicion_determinista([d(O, _D, S)|T]) :-
   origenesSimbolos(T, OrigenesSimbolos),
   no_pertenece(os(O,S), OrigenesSimbolos).
 
+
+% origenesSimbolos(+Transiciones, ?OrigenesSimbolos)
+% Convierte una lista de transiciones en una lista de tuplas de la forma os(Origen, Simbolo)
 origenesSimbolos([],[]).
 origenesSimbolos([d(O, _D, S)|T], [os(O,S)|TO]) :- origenesSimbolos(T,TO).
 
