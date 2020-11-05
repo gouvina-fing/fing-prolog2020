@@ -62,13 +62,9 @@ process_command(reiniciar,Visual,Jugador1,Jugador2,Turno,Tablero,Score1,Score2):
     ;   loop(Visual,'',Jugador1,Jugador2,Turno,Tablero,Score1,Score2)
     ).
 process_command(guardar,Visual,Jugador1,Jugador2,Turno,Tablero,Score1,Score2):-
-    open('estado.txt',write,Out),
-    write(Out,estado(Jugador1,Jugador2,Tablero,Score1,Score2,Turno)),
-    close(Out),
+    guardar(estado(Jugador1,Jugador2,Tablero,Score1,Score2,Turno)),
     loop(Visual,'Guardar.',Jugador1,Jugador2,Turno,Tablero,Score1,Score2).
 process_command(cargar,Visual,_,_,_,_,_,_):-
-    open('estado.txt',read,In),
-    read_line_to_codes(In,X),
-    close(In),
-    term_to_atom(estado(Jugador1,Jugador2,Tablero,Score1,Score2,Turno), X),
+    cargar(Estado),
+    term_to_atom(estado(Jugador1,Jugador2,Tablero,Score1,Score2,Turno), Estado),
     loop(Visual,'Cargar.',Jugador1,Jugador2,Turno,Tablero,Score1,Score2).

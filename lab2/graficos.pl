@@ -157,7 +157,7 @@ gr_texto(Ventana,X,Y,Texto):-
 	send(I, draw_in, Text, point(X,Y)).
 
 gr_dibujar_tablero(Ventana, Tablero):-
-    gr_dibujar(Ventana, 0, 0, 'back'),
+    gr_dibujar(Ventana, 0, 0, 'resources/back'),
     gr_dibujar_casas(Ventana, 0, Tablero),
 	!.
 
@@ -177,13 +177,13 @@ gr_dibujar_casas(Ventana,I,[Semillas|Casas]):-
 
 gr_dibujar_casa(Ventana,X,Y,Semillas):-
 	Semillas >= 7,!,
-	gr_dibujar(Ventana,X,Y,'seedsm'),
+	gr_dibujar(Ventana,X,Y,'resources/seedsm'),
 	Xt is X + 65,
 	Yt is Y + 65,
     gr_texto(Ventana,Xt,Yt,Semillas).
 gr_dibujar_casa(Ventana,X,Y,Semillas):-
 	% Semillas < 7,
-	atom_concat('seeds',Semillas,FileName),
+	atom_concat('resources/seeds',Semillas,FileName),
 	gr_dibujar(Ventana,X,Y,FileName).
 
 gr_evento(Ventana, Input) :-
