@@ -1,4 +1,5 @@
 :- use_module(graficos).
+:- use_module(utils).
 
 % Este archivo se provee como una guía para facilitar la implementación y 
 % entender el uso de graficos.pl
@@ -38,12 +39,13 @@ loop(Visual,MsgCmd,Jugador1,Jugador2,Turno,Tablero,Score1,Score2) :-
     gr_evento(Visual,E),
     process_command(E,Visual,Jugador1,Jugador2,Turno,Tablero,Score1,Score2).
 
-process_command(click(Casa),Visual,Jugador1,Jugador2,Turno,_Tablero,Score1,Score2):-
+process_command(click(Casa),Visual,Jugador1,Jugador2,Turno,Tablero,Score1,Score2) :-
     sformat(MsgCmd, 'Click en: ~w.', [Casa]),
     contrincante(Turno,SiguienteTurno),
-    loop(Visual,MsgCmd,Jugador1,Jugador2,SiguienteTurno,[0,5,5,5,5,4,4,4,4,4,4,4],Score1,Score2).
+    movimiento(4, Tablero, NuevoTablero, X),
+    writeln(Casa),
+    loop(Visual,MsgCmd,Jugador1,Jugador2,SiguienteTurno,NuevoTablero,Score1,Score2).
 
-    
 process_command(salir,Visual,Jugador1,Jugador2,Turno,Tablero,Score1,Score2):-
     (   gr_opciones(Visual, '¿Seguro?', ['Sí', 'No'], 'Sí')
     ->  true

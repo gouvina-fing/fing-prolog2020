@@ -211,7 +211,7 @@ es_transicion_determinista([d(O, _D, S)|T]) :-
 
 
 % origenesSimbolos(+Transiciones, ?OrigenesSimbolos)
-% Convierte una lista de transiciones en una lista de tuplas de la forma os(Origen, Simbolo)
+% Mapea la lista Transiciones a la lista de tuplas OrigenesSimbolos con forma os(Origen, Simbolo)
 origenesSimbolos([],[]).
 origenesSimbolos([d(O, _D, S)|T], [os(O,S)|TO]) :- origenesSimbolos(T,TO).
 
