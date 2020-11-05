@@ -44,13 +44,16 @@ process_command(click(Casa),Visual,Jugador1,Jugador2,Turno,Tablero,Score1,Score2
     sformat(MsgCmd, 'Click en: ~w.', [Casa]),
     contrincante(Turno,SiguienteTurno),
     (
-        movimiento(Casa, Tablero, NuevoTablero, X);
+        (
+            movimiento(Casa, Tablero, NuevoTablero, CasilleroFinal),
+            recoger_semillas(CasilleroFinal, Turno, NuevoTablero, NuevoTablero2, Score1, NuevoScore1, Score2, NuevoScore2)
+        );
         (
             gr_mensaje(Visual, 'Movimiento invalido'),
             loop(Visual,MsgCmd,Jugador1,Jugador2,Turno,Tablero,Score1,Score2)
         )
     ),
-    loop(Visual,MsgCmd,Jugador1,Jugador2,SiguienteTurno,NuevoTablero,Score1,Score2).
+    loop(Visual,MsgCmd,Jugador1,Jugador2,SiguienteTurno,NuevoTablero2,NuevoScore1,NuevoScore2).
 
 process_command(salir,Visual,Jugador1,Jugador2,Turno,Tablero,Score1,Score2):-
     (   gr_opciones(Visual, '¿Seguro?', ['Sí', 'No'], 'Sí')
