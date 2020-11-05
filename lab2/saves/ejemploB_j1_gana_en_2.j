@@ -1,0 +1,1 @@
+estado(maquina,maquina,[0,0,1,4,5,6],[0,1,0,0,4,0],21,6,jugador1).

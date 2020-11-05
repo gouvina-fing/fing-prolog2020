@@ -33,13 +33,13 @@ recoger_semillas(CasilleroFinal, jugador1, Tablero, NuevoTablero, Score1, NuevoS
   NuevoScore1 is Score1 + NumeroSemillas,
   NuevoCasilleroFinal is CasilleroFinal - 1,
   reemplazar(CasilleroFinal, 0, Tablero, NuevoTablero).
-  %recoger_semillas(NewCasilleroFinal, Turno, TableroActual, NuevoTablero, Score1, NuevoScore1, Score2, Score2).
+  %recoger_semillas(NuevoCasilleroFinal, jugador1, NuevoTablero, NuevoTablero, Score1, NuevoScore1, Score2, Score2).
 recoger_semillas(CasilleroFinal, jugador2, Tablero, NuevoTablero, Score1, Score1, Score2, NuevoScore2) :-
   nth0(CasilleroFinal, Tablero, NumeroSemillas),
   NuevoScore2 is Score2 + NumeroSemillas,
   NuevoCasilleroFinal is CasilleroFinal - 1,
   reemplazar(CasilleroFinal, 0, Tablero, NuevoTablero).
-  %recoger_semillas(NewCasilleroFinal, Turno, Tablero, TableroActual, Score1, Score1, Score2, NuevoScore2).
+  %recoger_semillas(NuevoCasilleroFinal, jugador2, NuevoTablero, NuevoTablero, Score1, Score1, Score2, NuevoScore2).
 
 
 % PREDICADOS AUXILIARES
