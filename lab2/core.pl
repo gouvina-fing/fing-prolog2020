@@ -21,7 +21,7 @@ movimiento(Casa, Tablero, NuevoTablero, Final) :-
 recoger_semillas(CasilleroFinal, jugador1, Tablero, Tablero, Score1, Score1, Score2, Score2) :-
   CasilleroFinal > 5.
 recoger_semillas(CasilleroFinal, jugador2, Tablero, Tablero, Score1, Score1, Score2, Score2) :-
-  CasilleroFinal < 5.
+  CasilleroFinal < 6.
 recoger_semillas(CasilleroFinal, Turno, Tablero, Tablero, Score1, Score1, Score2, Score2) :-
   nth0(CasilleroFinal, Tablero, NumeroSemillas),
   NumeroSemillas < 2.
