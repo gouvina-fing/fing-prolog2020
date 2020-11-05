@@ -1,4 +1,5 @@
 :- use_module(graficos).
+:- use_module(core).
 :- use_module(utils).
 
 % Este archivo se provee como una guía para facilitar la implementación y 
@@ -62,9 +63,11 @@ process_command(reiniciar,Visual,Jugador1,Jugador2,Turno,Tablero,Score1,Score2):
     ;   loop(Visual,'',Jugador1,Jugador2,Turno,Tablero,Score1,Score2)
     ).
 process_command(guardar,Visual,Jugador1,Jugador2,Turno,Tablero,Score1,Score2):-
-    guardar(estado(Jugador1,Jugador2,Tablero,Score1,Score2,Turno)),
+    separar_tablero(Tablero,Casas1,Casas2),
+    guardar(estado(Jugador1,Jugador2,Casas1,Casas2,Score1,Score2,Turno)),
     loop(Visual,'Guardar.',Jugador1,Jugador2,Turno,Tablero,Score1,Score2).
 process_command(cargar,Visual,_,_,_,_,_,_):-
     cargar(Estado),
-    term_to_atom(estado(Jugador1,Jugador2,Tablero,Score1,Score2,Turno), Estado),
+    term_to_atom(estado(Jugador1,Jugador2,Casas1,Casas2,Score1,Score2,Turno), Estado),
+    append(Casas1,Casas2,Tablero),
     loop(Visual,'Cargar.',Jugador1,Jugador2,Turno,Tablero,Score1,Score2).
