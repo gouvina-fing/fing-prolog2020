@@ -42,8 +42,13 @@ loop(Visual,MsgCmd,Jugador1,Jugador2,Turno,Tablero,Score1,Score2) :-
 process_command(click(Casa),Visual,Jugador1,Jugador2,Turno,Tablero,Score1,Score2) :-
     sformat(MsgCmd, 'Click en: ~w.', [Casa]),
     contrincante(Turno,SiguienteTurno),
-    movimiento(4, Tablero, NuevoTablero, X),
-    writeln(Casa),
+    (
+        movimiento(Casa, Tablero, NuevoTablero, X);
+        (
+            gr_mensaje(Visual, 'Movimiento invalido'),
+            loop(Visual,MsgCmd,Jugador1,Jugador2,Turno,Tablero,Score1,Score2)
+        )
+    ),
     loop(Visual,MsgCmd,Jugador1,Jugador2,SiguienteTurno,NuevoTablero,Score1,Score2).
 
 process_command(salir,Visual,Jugador1,Jugador2,Turno,Tablero,Score1,Score2):-
