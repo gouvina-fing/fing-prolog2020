@@ -38,10 +38,12 @@ loop(Visual,MsgCmd,Jugador1,Jugador2,Turno,Tablero,Score1,Score2) :-
     gr_evento(Visual,E),
     process_command(E,Visual,Jugador1,Jugador2,Turno,Tablero,Score1,Score2).
 
-process_command(click(Casa),Visual,Jugador1,Jugador2,Turno,Tablero,Score1,Score2):-
+process_command(click(Casa),Visual,Jugador1,Jugador2,Turno,_Tablero,Score1,Score2):-
     sformat(MsgCmd, 'Click en: ~w.', [Casa]),
     contrincante(Turno,SiguienteTurno),
-    loop(Visual,MsgCmd,Jugador1,Jugador2,SiguienteTurno,Tablero,Score1,Score2).
+    loop(Visual,MsgCmd,Jugador1,Jugador2,SiguienteTurno,[0,5,5,5,5,4,4,4,4,4,4,4],Score1,Score2).
+
+    
 process_command(salir,Visual,Jugador1,Jugador2,Turno,Tablero,Score1,Score2):-
     (   gr_opciones(Visual, '¿Seguro?', ['Sí', 'No'], 'Sí')
     ->  true
@@ -53,6 +55,13 @@ process_command(reiniciar,Visual,Jugador1,Jugador2,Turno,Tablero,Score1,Score2):
     ;   loop(Visual,'',Jugador1,Jugador2,Turno,Tablero,Score1,Score2)
     ).
 process_command(guardar,Visual,Jugador1,Jugador2,Turno,Tablero,Score1,Score2):-
+    open('estado.txt',write,Out),
+    write(Out,estado(Jugador1,Jugador2,Tablero,Score1,Score2,Turno)),
+    close(Out),
     loop(Visual,'Guardar.',Jugador1,Jugador2,Turno,Tablero,Score1,Score2).
-process_command(cargar,Visual,Jugador1,Jugador2,Turno,Tablero,Score1,Score2):-
+process_command(cargar,Visual,_,_,_,_,_,_):-
+    open('estado.txt',read,In),
+    read_line_to_codes(In,X),
+    close(In),
+    term_to_atom(estado(Jugador1,Jugador2,Tablero,Score1,Score2,Turno), X),
     loop(Visual,'Cargar.',Jugador1,Jugador2,Turno,Tablero,Score1,Score2).
