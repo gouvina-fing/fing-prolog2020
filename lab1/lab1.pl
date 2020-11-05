@@ -17,7 +17,7 @@ no_pertenece(_,[]).
 no_pertenece(X,[Y|T]) :- X \= Y, no_pertenece(X,T).
 
 % elegir(?X, ?L1, ?L2)
-% La lista L2 resulta de eliminiar un elemento de la lista L1
+% La lista L2 resulta de eliminar un elemento de la lista L1
 elegir(X, [X|T], T).
 elegir(X, [Z|T], [Z|O]) :- elegir(X, T, O).
 
@@ -56,7 +56,7 @@ combinacion([_|T], N, X) :- combinacion(T, N, X), largo(X, N).
 % prefijo(+L1, ?L2)
 % L2 es prefijo de L1
 prefijo(_,[]).
-prefijo([H|T],[Hp|Tp]):-H=Hp,prefijo(T,Tp).
+prefijo([H|T],[Hp|Tp]) :- H=Hp,prefijo(T,Tp).
 
 % EJERCICIO 2 
 % --------------------------------------------------------------------
@@ -169,7 +169,7 @@ reconoce_eps_siguiente(af(Q,S,F,Delta), [H], X) :- pertenece(d(X,Y,epsilon), Del
 reconoce_eps_siguiente(af(Q,S,F,Delta), [H|T], X) :- pertenece(d(X,Y,H), Delta), reconoce_eps_siguiente(af(Q,S,F,Delta), T, Y).
 reconoce_eps_siguiente(af(Q,S,F,Delta), [H|T], X) :- pertenece(d(X,Y,epsilon), Delta), reconoce_eps_siguiente(af(Q,S,F,Delta), [H|T], Y).
 % reconoce_eps_final controla si se consumió toda la tira pero hay un camino de largo finito hasta un estado final a través de transiciones epsilon
-reconoce_eps_final(af(_Q,_S,F,[d(X,Y,epsilon)|T]), X) :- pertenece(Y,F). % Caso 1 epsilon al final
+reconoce_eps_final(af(_Q,_S,F,[d(X,Y,epsilon)|_T]), X) :- pertenece(Y,F). % Caso 1 epsilon al final
 reconoce_eps_final(af(Q,S,F,[d(X,Y,epsilon)|T]), X) :- reconoce_eps_final(af(Q,S,F,T), Y). % Caso 2+ epsilon al final
 
 % Metodos Auxiliares (para automatas)
