@@ -3,8 +3,10 @@
   % PREDICADOS PRINCIPALES
   movimiento/4, % +Jugador, +Tablero, -Nuevo_Tablero, +Score_Jugador, -Score_Final_Jugador, +Casillero_final
   % Devuelve en Score_Jugador el score de recoger semillas en el casillero final
-  recoger_semillas/8 % +Jugador, +Tablero, -Nuevo_Tablero, +Score_Jugador, -Score_Final_Jugador, +Casillero_final
+  recoger_semillas/8, % +Jugador, +Tablero, -Nuevo_Tablero, +Score_Jugador, -Score_Final_Jugador, +Casillero_final
   % Devuelve en Score_Jugador el score de recoger semillas en el casillero final
+  comprobar_validez/2 %
+  %
 ]).
 
 :- use_module(utils).
@@ -52,6 +54,15 @@ recoger_semillas(CasilleroFinal, jugador2, Tablero, NuevoTablero, Score1, Score1
           NuevoTablero = Tablero
         )
     ).
+
+comprobar_validez(jugador1, Tablero) :-
+    separar_tablero(Tablero, _, Casas2),
+    colapsar(Casas2, Semillas),
+    Semillas > 0.
+comprobar_validez(jugador2, Tablero) :-
+    separar_tablero(Tablero, Casas1, _),
+    colapsar(Casas1, Semillas),
+    Semillas > 0.
 
 % PREDICADOS AUXILIARES
 

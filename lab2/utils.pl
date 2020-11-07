@@ -3,6 +3,8 @@
   % PREDICADOS GENERALES
   reemplazar/4, %
   %
+  colapsar/2, %
+  %
 
   % PREDICADOS PARA JUEGO
   convertir_a_indice/2, %
@@ -24,6 +26,11 @@ reemplazar(0, E, [_|T], [E|T]).
 reemplazar(P, E, [H|T], [H|R]) :-
     P > 0, NP is P-1, reemplazar(NP, E, T, R).
 
+%
+colapsar([H],H).
+colapsar([H1,H2|T],Suma) :-
+    colapsar([H1+H2|T],Suma).
+
 % PREDICADOS PARA JUEGO
 
 % array([A1, B1, C1, D1, E1, F1, A2, B2, C2, D2, E2, F2]).
@@ -34,6 +41,8 @@ convertir_a_indice(Casa, Indice) :-
 separar_tablero([C1,C2,C3,C4,C5,C6|T], Casas1, Casas2) :-
   Casas1 = [C1,C2,C3,C4,C5,C6],
   Casas2 = T.
+
+%
 
 % PREDICADOS PARA ARCHIVOS
 

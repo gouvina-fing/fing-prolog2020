@@ -54,30 +54,39 @@ process_command(click(Casa),Visual,Jugador1,Jugador2,Turno,Tablero,Score1,Score2
         ->
         (
             recoger_semillas(CasilleroFinal, Turno, NuevoTablero, NuevoTablero2, Score1, NuevoScore1, Score2, NuevoScore2),
+            writeln(Tablero),
             (
-                (NuevoScore1 is 24, NuevoScore2 is 24)
-                -> 
-                loopFinal(empatar,Visual,MsgCmd,Jugador1,Jugador2,SiguienteTurno,NuevoTablero2,NuevoScore1,NuevoScore2)
-                ;
+                comprobar_validez(Turno,NuevoTablero2)
+                ->
                 (
-                    NuevoScore1 > 24
-                    ->
-                    loopFinal(ganar1,Visual,MsgCmd,Jugador1,Jugador2,Turno,NuevoTablero2,NuevoScore1,NuevoScore2)
+                    (NuevoScore1 is 24, NuevoScore2 is 24)
+                    -> 
+                    loopFinal(empatar,Visual,MsgCmd,Jugador1,Jugador2,SiguienteTurno,NuevoTablero2,NuevoScore1,NuevoScore2)
                     ;
                     (
-                        NuevoScore2 > 24
+                        NuevoScore1 > 24
                         ->
-                        loopFinal(ganar2,Visual,MsgCmd,Jugador1,Jugador2,Turno,NuevoTablero2,NuevoScore1,NuevoScore2)
+                        loopFinal(ganar1,Visual,MsgCmd,Jugador1,Jugador2,Turno,NuevoTablero2,NuevoScore1,NuevoScore2)
                         ;
-                        loop(Visual,MsgCmd,Jugador1,Jugador2,SiguienteTurno,NuevoTablero2,NuevoScore1,NuevoScore2)
+                        (
+                            NuevoScore2 > 24
+                            ->
+                            loopFinal(ganar2,Visual,MsgCmd,Jugador1,Jugador2,Turno,NuevoTablero2,NuevoScore1,NuevoScore2)
+                            ;
+                            loop(Visual,MsgCmd,Jugador1,Jugador2,SiguienteTurno,NuevoTablero2,NuevoScore1,NuevoScore2)
+                        )
                     )
                 )
-                
+                ;
+                (
+                    gr_mensaje(Visual, 'Movimiento invalido (Casas del oponente quedarían vacías)'),
+                    loop(Visual,MsgCmd,Jugador1,Jugador2,Turno,Tablero,Score1,Score2)
+                )
             )
         )
         ;
         (
-            gr_mensaje(Visual, 'Movimiento invalido'),
+            gr_mensaje(Visual, 'Movimiento invalido (Casilla vacía)'),
             loop(Visual,MsgCmd,Jugador1,Jugador2,Turno,Tablero,Score1,Score2)
         )
     ).
