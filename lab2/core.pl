@@ -25,7 +25,7 @@ recoger_semillas(CasilleroFinal, jugador1, Tablero, NuevoTablero, Score1, NuevoS
         ->
         (
             ScoreAux1 is Score1 + NumeroSemillas,
-            NuevoCasilleroFinal is CasilleroFinal - 1,
+            NuevoCasilleroFinal is (CasilleroFinal - 1) mod 11,
             reemplazar(CasilleroFinal, 0, Tablero, TableroAux),
             recoger_semillas(NuevoCasilleroFinal, jugador1, TableroAux, NuevoTablero, ScoreAux1, NuevoScore1, Score2, Score2)
         )
@@ -42,7 +42,7 @@ recoger_semillas(CasilleroFinal, jugador2, Tablero, NuevoTablero, Score1, Score1
         ->
         (
             ScoreAux2 is Score2 + NumeroSemillas,
-            NuevoCasilleroFinal is CasilleroFinal - 1,
+            NuevoCasilleroFinal is (CasilleroFinal - 1) mod 11,
             reemplazar(CasilleroFinal, 0, Tablero, TableroAux),
             recoger_semillas(NuevoCasilleroFinal, jugador2, TableroAux, NuevoTablero, Score1, Score1, ScoreAux2, NuevoScore2)
         )
