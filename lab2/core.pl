@@ -1,10 +1,10 @@
 :- module(core,
 [
   % PREDICADOS PRINCIPALES
-  movimiento/4, % +Jugador, +Tablero, -Nuevo_Tablero, +Score_Jugador, -Score_Final_Jugador, +Casillero_final
-  % Devuelve en Score_Jugador el score de recoger semillas en el casillero final
-  recoger_semillas/8, % +Jugador, +Tablero, -Nuevo_Tablero, +Score_Jugador, -Score_Final_Jugador, +Casillero_final
-  % Devuelve en Score_Jugador el score de recoger semillas en el casillero final
+  movimiento/4, % +Casa, +Tablero, -Nuevo_Tablero, -Final
+  % Realiza el movimiento producto de sacar las semillas de Casa y repartirlas en las siguientes
+  recoger_semillas/8, % +CasilleroFinal, +Jugador, +Tablero, -NuevoTablero, +Score1, -NuevoScore1, +Score2, -NuevoScore2 
+  % Realiza la recogida producto de levantar las semillas en CasilleroFinal, devolviendo los puntajes y el tablero actualizado
   comprobar_validez/2 % +Turno, +Tablero
   % Comprueba si el tablero actual es valido dada la jugada anterior
 ]).
