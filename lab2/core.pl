@@ -5,8 +5,8 @@
   % Devuelve en Score_Jugador el score de recoger semillas en el casillero final
   recoger_semillas/8, % +Jugador, +Tablero, -Nuevo_Tablero, +Score_Jugador, -Score_Final_Jugador, +Casillero_final
   % Devuelve en Score_Jugador el score de recoger semillas en el casillero final
-  comprobar_validez/2 %
-  %
+  comprobar_validez/2 % +Turno, +Tablero
+  % Comprueba si el tablero actual es valido dada la jugada anterior
 ]).
 
 :- use_module(utils).
