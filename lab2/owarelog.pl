@@ -40,20 +40,32 @@ loop(Visual,MsgCmd,Jugador1,Jugador2,Turno,Tablero,Score1,Score2) :-
     gr_evento(Visual,E),
     process_command(E,Visual,Jugador1,Jugador2,Turno,Tablero,Score1,Score2).
 
+loopFinal(Comando,Visual,Jugador1,Jugador2,Turno,Tablero,Score1,Score2) :-
+    gr_dibujar_tablero(Visual,Tablero),
+    process_command(Comando,Visual,Jugador1,Jugador2,Turno,Tablero,Score1,Score2).
+
 process_command(click(Casa),Visual,Jugador1,Jugador2,Turno,Tablero,Score1,Score2) :-
     sformat(MsgCmd, 'Click en: ~w.', [Casa]),
     contrincante(Turno,SiguienteTurno),
     (
+        movimiento(Casa, Tablero, NuevoTablero, CasilleroFinal)
+        ->
         (
-            movimiento(Casa, Tablero, NuevoTablero, CasilleroFinal),
-            recoger_semillas(CasilleroFinal, Turno, NuevoTablero, NuevoTablero2, Score1, NuevoScore1, Score2, NuevoScore2)
-        );
+            recoger_semillas(CasilleroFinal, Turno, NuevoTablero, NuevoTablero2, Score1, NuevoScore1, Score2, NuevoScore2),
+            (
+                (NuevoScore1 is 24, NuevoScore2 is 24)
+                -> 
+                loopFinal(empatar,Visual,Jugador1,Jugador2,SiguienteTurno,NuevoTablero2,NuevoScore1,NuevoScore2)
+                ;
+                loop(Visual,MsgCmd,Jugador1,Jugador2,SiguienteTurno,NuevoTablero2,NuevoScore1,NuevoScore2)
+            )
+        )
+        ;
         (
             gr_mensaje(Visual, 'Movimiento invalido'),
             loop(Visual,MsgCmd,Jugador1,Jugador2,Turno,Tablero,Score1,Score2)
         )
-    ),
-    loop(Visual,MsgCmd,Jugador1,Jugador2,SiguienteTurno,NuevoTablero2,NuevoScore1,NuevoScore2).
+    ).
 
 process_command(salir,Visual,Jugador1,Jugador2,Turno,Tablero,Score1,Score2):-
     (   gr_opciones(Visual, '¿Seguro?', ['Sí', 'No'], 'Sí')
@@ -74,3 +86,8 @@ process_command(cargar,Visual,_,_,_,_,_,_):-
     term_to_atom(estado(Jugador1,Jugador2,Casas1,Casas2,Score1,Score2,Turno), Estado),
     append(Casas1,Casas2,Tablero),
     loop(Visual,'Cargar.',Jugador1,Jugador2,Turno,Tablero,Score1,Score2).
+process_command(empatar,Visual,Jugador1,Jugador2,Turno,Tablero,Score1,Score2):-
+    (   gr_opciones(Visual, '¡Es un empate! ¿Quiere reiniciar el juego?', ['Sí', 'No'], 'Sí')
+    ->  iniciar_juego(Visual,Jugador1,Jugador2)
+    ;   true
+    ).

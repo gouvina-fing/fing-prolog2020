@@ -3,8 +3,10 @@
   % PREDICADOS PRINCIPALES
   movimiento/4, % +Jugador, +Tablero, -Nuevo_Tablero, +Score_Jugador, -Score_Final_Jugador, +Casillero_final
   % Devuelve en Score_Jugador el score de recoger semillas en el casillero final
-  recoger_semillas/8 % +Jugador, +Tablero, -Nuevo_Tablero, +Score_Jugador, -Score_Final_Jugador, +Casillero_final
+  recoger_semillas/8, % +Jugador, +Tablero, -Nuevo_Tablero, +Score_Jugador, -Score_Final_Jugador, +Casillero_final
   % Devuelve en Score_Jugador el score de recoger semillas en el casillero final
+  comprobar_victoria/1 %
+  %
 ]).
 
 :- use_module(utils).
@@ -19,9 +21,9 @@ movimiento(Casa, Tablero, NuevoTablero, Final) :-
   repartir_semillas(Indice, TableroActual, NuevoTablero, Semillas, Final).
 
 recoger_semillas(CasilleroFinal, jugador1, Tablero, Tablero, Score1, Score1, Score2, Score2) :-
-  CasilleroFinal > 5.
-recoger_semillas(CasilleroFinal, jugador2, Tablero, Tablero, Score1, Score1, Score2, Score2) :-
   CasilleroFinal < 6.
+recoger_semillas(CasilleroFinal, jugador2, Tablero, Tablero, Score1, Score1, Score2, Score2) :-
+  CasilleroFinal > 5.
 recoger_semillas(CasilleroFinal, Turno, Tablero, Tablero, Score1, Score1, Score2, Score2) :-
   nth0(CasilleroFinal, Tablero, NumeroSemillas),
   NumeroSemillas < 2.
@@ -41,6 +43,8 @@ recoger_semillas(CasilleroFinal, jugador2, Tablero, NuevoTablero, Score1, Score1
   reemplazar(CasilleroFinal, 0, Tablero, NuevoTablero).
   %recoger_semillas(NuevoCasilleroFinal, jugador2, NuevoTablero, NuevoTablero, Score1, Score1, Score2, NuevoScore2).
 
+comprobar_victoria(Score) :-
+  Score < 24.
 
 % PREDICADOS AUXILIARES
 
