@@ -57,7 +57,20 @@ process_command(click(Casa),Visual,Jugador1,Jugador2,Turno,Tablero,Score1,Score2
                 -> 
                 loopFinal(empatar,Visual,Jugador1,Jugador2,SiguienteTurno,NuevoTablero2,NuevoScore1,NuevoScore2)
                 ;
-                loop(Visual,MsgCmd,Jugador1,Jugador2,SiguienteTurno,NuevoTablero2,NuevoScore1,NuevoScore2)
+                (
+                    NuevoScore1 > 24
+                    ->
+                    loopFinal(ganar1,Visual,Jugador1,Jugador2,Turno,NuevoTablero2,NuevoScore1,NuevoScore2)
+                    ;
+                    (
+                        NuevoScore2 > 24
+                        ->
+                        loopFinal(ganar2,Visual,Jugador1,Jugador2,Turno,NuevoTablero2,NuevoScore1,NuevoScore2)
+                        ;
+                        loop(Visual,MsgCmd,Jugador1,Jugador2,SiguienteTurno,NuevoTablero2,NuevoScore1,NuevoScore2)
+                    )
+                )
+                
             )
         )
         ;
@@ -88,6 +101,16 @@ process_command(cargar,Visual,_,_,_,_,_,_):-
     loop(Visual,'Cargar.',Jugador1,Jugador2,Turno,Tablero,Score1,Score2).
 process_command(empatar,Visual,Jugador1,Jugador2,Turno,Tablero,Score1,Score2):-
     (   gr_opciones(Visual, '¡Es un empate! ¿Quiere reiniciar el juego?', ['Sí', 'No'], 'Sí')
+    ->  iniciar_juego(Visual,Jugador1,Jugador2)
+    ;   true
+    ).
+process_command(ganar1,Visual,Jugador1,Jugador2,Turno,Tablero,Score1,Score2):-
+    (   gr_opciones(Visual, '¡Es una victoria del jugador 1! ¿Quiere reiniciar el juego?', ['Sí', 'No'], 'Sí')
+    ->  iniciar_juego(Visual,Jugador1,Jugador2)
+    ;   true
+    ).
+process_command(ganar2,Visual,Jugador1,Jugador2,Turno,Tablero,Score1,Score2):-
+    (   gr_opciones(Visual, '¡Es una victoria del jugador 2! ¿Quiere reiniciar el juego?', ['Sí', 'No'], 'Sí')
     ->  iniciar_juego(Visual,Jugador1,Jugador2)
     ;   true
     ).
