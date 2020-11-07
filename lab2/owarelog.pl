@@ -40,8 +40,10 @@ loop(Visual,MsgCmd,Jugador1,Jugador2,Turno,Tablero,Score1,Score2) :-
     gr_evento(Visual,E),
     process_command(E,Visual,Jugador1,Jugador2,Turno,Tablero,Score1,Score2).
 
-loopFinal(Comando,Visual,Jugador1,Jugador2,Turno,Tablero,Score1,Score2) :-
+loopFinal(Comando,Visual,MsgCmd,Jugador1,Jugador2,Turno,Tablero,Score1,Score2) :-
     gr_dibujar_tablero(Visual,Tablero),
+    sformat(Msg, '~w Jugador 1: ~w puntos. Jugador 2: ~w puntos.', [MsgCmd,Score1,Score2]),
+    gr_estado(Visual,Msg),
     process_command(Comando,Visual,Jugador1,Jugador2,Turno,Tablero,Score1,Score2).
 
 process_command(click(Casa),Visual,Jugador1,Jugador2,Turno,Tablero,Score1,Score2) :-
@@ -55,17 +57,17 @@ process_command(click(Casa),Visual,Jugador1,Jugador2,Turno,Tablero,Score1,Score2
             (
                 (NuevoScore1 is 24, NuevoScore2 is 24)
                 -> 
-                loopFinal(empatar,Visual,Jugador1,Jugador2,SiguienteTurno,NuevoTablero2,NuevoScore1,NuevoScore2)
+                loopFinal(empatar,Visual,MsgCmd,Jugador1,Jugador2,SiguienteTurno,NuevoTablero2,NuevoScore1,NuevoScore2)
                 ;
                 (
                     NuevoScore1 > 24
                     ->
-                    loopFinal(ganar1,Visual,Jugador1,Jugador2,Turno,NuevoTablero2,NuevoScore1,NuevoScore2)
+                    loopFinal(ganar1,Visual,MsgCmd,Jugador1,Jugador2,Turno,NuevoTablero2,NuevoScore1,NuevoScore2)
                     ;
                     (
                         NuevoScore2 > 24
                         ->
-                        loopFinal(ganar2,Visual,Jugador1,Jugador2,Turno,NuevoTablero2,NuevoScore1,NuevoScore2)
+                        loopFinal(ganar2,Visual,MsgCmd,Jugador1,Jugador2,Turno,NuevoTablero2,NuevoScore1,NuevoScore2)
                         ;
                         loop(Visual,MsgCmd,Jugador1,Jugador2,SiguienteTurno,NuevoTablero2,NuevoScore1,NuevoScore2)
                     )
