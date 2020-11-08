@@ -5,6 +5,8 @@
   %
   colapsar/2, % +Lista, -Resultado
   % Suma los valores de Lista en Resultado
+  eshumano/3, % +Jugador1, +Jugador2, +Turno
+  % Determina si el jugador del cual es el turno es humano
 
   % PREDICADOS PARA JUEGO
   convertir_a_indice/2, % +Casa, -Indice
@@ -30,6 +32,9 @@ reemplazar(P, E, [H|T], [H|R]) :-
 colapsar([H],H).
 colapsar([H1,H2|T],Suma) :-
     colapsar([H1+H2|T],Suma).
+
+eshumano(humano, _Jugador2, jugador1).
+eshumano(_Jugador1, humano, jugador2).
 
 % PREDICADOS PARA JUEGO
 

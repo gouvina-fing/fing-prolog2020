@@ -1,6 +1,7 @@
 :- use_module(graficos).
 :- use_module(core).
 :- use_module(utils).
+:- use_module(maquina).
 
 % Este archivo se provee como una guía para facilitar la implementación y 
 % entender el uso de graficos.pl
@@ -37,8 +38,16 @@ loop(Visual,MsgCmd,Jugador1,Jugador2,Turno,Tablero,Score1,Score2) :-
     gr_dibujar_tablero(Visual,Tablero),
     sformat(Msg, '~w Jugador 1: ~w puntos. Jugador 2: ~w puntos. Turno de ~w', [MsgCmd,Score1,Score2,Turno]),
     gr_estado(Visual,Msg),
-    gr_evento(Visual,E),
-    process_command(E,Visual,Jugador1,Jugador2,Turno,Tablero,Score1,Score2).
+    eshumano(Jugador1, Jugador2, Turno) -> 
+    (
+        gr_evento(Visual,E),
+        process_command(E,Visual,Jugador1,Jugador2,Turno,Tablero,Score1,Score2)
+    );
+    (
+        minimax_depth(X),
+        iniciar_maquina(X, Turno, Tablero, Score1, Score2, CasaElegida),
+        process_command(click(CasaElegida),Visual,Jugador1,Jugador2,Turno,Tablero,Score1,Score2)
+    ).
 
 loopFinal(Comando,Visual,MsgCmd,Jugador1,Jugador2,Turno,Tablero,Score1,Score2) :-
     gr_dibujar_tablero(Visual,Tablero),
@@ -79,8 +88,26 @@ process_command(click(Casa),Visual,Jugador1,Jugador2,Turno,Tablero,Score1,Score2
                 )
                 ;
                 (
-                    gr_mensaje(Visual, 'Movimiento invalido (Casas del oponente quedarían vacías)'),
-                    loop(Visual,MsgCmd,Jugador1,Jugador2,Turno,Tablero,Score1,Score2)
+                    terminar_partida_invalida(Score1, Score2, Tablero, NuevoScoreInvalido1, NuevoScoreInvalido2),
+                    (
+                        (NuevoScoreInvalido1 is 24, NuevoScoreInvalido2 is 24)
+                        -> 
+                        loopFinal(empatar,Visual,MsgCmd,Jugador1,Jugador2,SiguienteTurno,Tablero,NuevoScoreInvalido1,NuevoScoreInvalido2)
+                        ;
+                        (
+                            NuevoScoreInvalido1 > 24
+                            ->
+                            loopFinal(ganar1,Visual,MsgCmd,Jugador1,Jugador2,Turno,Tablero,NuevoScoreInvalido1,NuevoScoreInvalido2)
+                            ;
+                            (
+                                NuevoScoreInvalido2 > 24
+                                ->
+                                loopFinal(ganar2,Visual,MsgCmd,Jugador1,Jugador2,Turno,Tablero,NuevoScoreInvalido1,NuevoScoreInvalido2)
+                                ;
+                                loop(Visual,MsgCmd,Jugador1,Jugador2,SiguienteTurno,Tablero,NuevoScoreInvalido1,NuevoScoreInvalido2)
+                            )
+                        )
+                    )
                 )
             )
         )

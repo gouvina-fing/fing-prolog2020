@@ -1,0 +1,1 @@
+estado(humano,humano,[0,0,0,0,0,1],[1,0,0,0,0,0],22,24,jugador1).

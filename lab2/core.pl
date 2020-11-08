@@ -5,8 +5,10 @@
   % Realiza el movimiento producto de sacar las semillas de Casa y repartirlas en las siguientes para el turno correspondiente al Jugador
   recoger_semillas/8, % +CasilleroFinal, +Jugador, +Tablero, -NuevoTablero, +Score1, -NuevoScore1, +Score2, -NuevoScore2 
   % Realiza la recogida producto de levantar las semillas en CasilleroFinal, devolviendo los puntajes y el tablero actualizado
-  comprobar_validez/2 % +Turno, +Tablero
+  comprobar_validez/2, % +Turno, +Tablero
   % Comprueba si el tablero actual es valido dada la jugada anterior
+  terminar_partida_invalida/5 %+Score1, +Score2, +Tablero, -NuevoScore1, -NuevoScore2
+  % Suma score finales de una partida invalida
 ]).
 
 :- use_module(utils).
@@ -63,13 +65,26 @@ recoger_semillas(CasilleroFinal, jugador2, Tablero, NuevoTablero, Score1, Score1
     ).
 
 comprobar_validez(jugador1, Tablero) :-
-    separar_tablero(Tablero, _, Casas2),
-    colapsar(Casas2, Semillas),
-    Semillas > 0.
+    separar_tablero(Tablero, Casas1, Casas2),
+    colapsar(Casas2, SemillasOponente),
+    colapsar(Casas1, SemillasJugador),
+    colapsar(Tablero, SemillasTotales),
+    (SemillasTotales =:= 0;
+    (SemillasOponente > 0, SemillasJugador > 0)).
 comprobar_validez(jugador2, Tablero) :-
-    separar_tablero(Tablero, Casas1, _),
-    colapsar(Casas1, Semillas),
-    Semillas > 0.
+    separar_tablero(Tablero, Casas1, Casas2),
+    colapsar(Casas2, SemillasJugador),
+    colapsar(Casas1, SemillasOponente),
+    colapsar(Tablero, SemillasTotales),
+    (SemillasTotales =:= 0;
+    (SemillasOponente > 0, SemillasJugador > 0)).
+
+terminar_partida_invalida(Score1, Score2, Tablero, NuevoScore1, NuevoScore2) :-
+    separar_tablero(Tablero, Casas1, Casas2),
+    colapsar(Casas1, Semillas1),
+    colapsar(Casas2, Semillas2),
+    NuevoScore1 is Semillas1 + Score1,
+    NuevoScore2 is Semillas2 + Score2.
 
 % PREDICADOS AUXILIARES
 
