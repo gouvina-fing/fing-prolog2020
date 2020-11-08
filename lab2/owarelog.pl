@@ -50,7 +50,7 @@ process_command(click(Casa),Visual,Jugador1,Jugador2,Turno,Tablero,Score1,Score2
     sformat(MsgCmd, 'Click en: ~w.', [Casa]),
     contrincante(Turno,SiguienteTurno),
     (
-        movimiento(Casa, Tablero, NuevoTablero, CasilleroFinal)
+        movimiento(Casa, Tablero, Turno, NuevoTablero, CasilleroFinal)
         ->
         (
             recoger_semillas(CasilleroFinal, Turno, NuevoTablero, NuevoTablero2, Score1, NuevoScore1, Score2, NuevoScore2),
@@ -86,7 +86,7 @@ process_command(click(Casa),Visual,Jugador1,Jugador2,Turno,Tablero,Score1,Score2
         )
         ;
         (
-            gr_mensaje(Visual, 'Movimiento invalido (Casilla vacía)'),
+            gr_mensaje(Visual, 'Movimiento invalido'),
             loop(Visual,MsgCmd,Jugador1,Jugador2,Turno,Tablero,Score1,Score2)
         )
     ).
