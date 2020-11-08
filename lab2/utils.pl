@@ -13,11 +13,13 @@
   % Dada una lista Tablero, separa los primeros 6 elementos en Casas1 y los últimos 6 en Casas2
 
   % PREDICADOS PARA ARCHIVOS
-  cargar/1,  % +Estado
+  cargar/2,  % +Estado
   % Carga el estado guardado en saves/estado.txt sobreescribiendo la partida actual
-  guardar/1 % +Estado
+  guardar/2 % +Estado, +Visual
   % Guarda el estado actual de la partida en saves/estado.txt
 ]).
+
+:- use_module(graficos).
 
 % PREDICADOS GENERALES
 
@@ -42,13 +44,19 @@ separar_tablero([C1,C2,C3,C4,C5,C6|T], Casas1, Casas2) :-
 % PREDICADOS PARA ARCHIVOS
 
 % Carga Estado = estado(Jugador1,Jugador2,Tablero,Score1,Score2,Turno) desde saves/estado.txt
-cargar(Estado):-
-    open('saves/estado.txt',read,In),
+cargar(Estado, Visual):-
+    gr_pregunta(Visual, 'Nombre del archivo a guardar?', Nombre),
+    string_concat(Nombre, '.txt', Nombre_Archivo),
+    string_concat('saves/', Nombre_Archivo, Path_Archivo),
+    open(Path_Archivo,read,In),
     read_line_to_codes(In,Estado),
     close(In).
 
 % Guarda Estado = estado(Jugador1,Jugador2,Tablero,Score1,Score2,Turno) en saves/estado.txt
-guardar(Estado):-
-    open('saves/estado.txt',write,Out),
+guardar(Estado, Visual):-
+    gr_pregunta(Visual, 'Nombre del archivo a guardar?', Nombre),
+    string_concat(Nombre, '.txt', Nombre_Archivo),
+    string_concat('saves/', Nombre_Archivo, Path_Archivo),
+    open(Path_Archivo,write,Out),
     write(Out,Estado),
     close(Out).
