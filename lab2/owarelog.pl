@@ -103,10 +103,10 @@ process_command(reiniciar,Visual,Jugador1,Jugador2,Turno,Tablero,Score1,Score2):
     ).
 process_command(guardar,Visual,Jugador1,Jugador2,Turno,Tablero,Score1,Score2):-
     separar_tablero(Tablero,Casas1,Casas2),
-    guardar(estado(Jugador1,Jugador2,Casas1,Casas2,Score1,Score2,Turno)),
+    guardar(estado(Jugador1,Jugador2,Casas1,Casas2,Score1,Score2,Turno), Visual),
     loop(Visual,'Guardar.',Jugador1,Jugador2,Turno,Tablero,Score1,Score2).
 process_command(cargar,Visual,_,_,_,_,_,_):-
-    cargar(Estado),
+    cargar(Estado, Visual),
     term_to_atom(estado(Jugador1,Jugador2,Casas1,Casas2,Score1,Score2,Turno), Estado),
     append(Casas1,Casas2,Tablero),
     loop(Visual,'Cargar.',Jugador1,Jugador2,Turno,Tablero,Score1,Score2).
