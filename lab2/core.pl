@@ -7,6 +7,8 @@
   % Realiza la recogida producto de levantar las semillas en CasilleroFinal, devolviendo los puntajes y el tablero actualizado
   comprobar_validez/2, % +Turno, +Tablero
   % Comprueba si el tablero actual es valido dada la jugada anterior
+  quedan_movimientos_validos/2, % +Turno, +Tablero
+  % Comprueba si quedan movimientos validos en el  tablero actual
   terminar_partida_invalida/5 %+Score1, +Score2, +Tablero, -NuevoScore1, -NuevoScore2
   % Suma score finales de una partida invalida
 ]).
@@ -78,6 +80,16 @@ comprobar_validez(jugador2, Tablero) :-
     colapsar(Tablero, SemillasTotales),
     (SemillasTotales =:= 0;
     (SemillasOponente > 0, SemillasJugador > 0)).
+
+quedan_movimientos_validos(jugador1, Tablero) :-
+    separar_tablero(Tablero, Casas1, _),
+    colapsar(Casas1, SemillasJugador),
+    SemillasJugador > 0.
+
+quedan_movimientos_validos(jugador2, Tablero) :-
+    separar_tablero(Tablero, _, Casa2),
+    colapsar(Casas2, SemillasJugador),
+    SemillasJugador > 0.
 
 terminar_partida_invalida(Score1, Score2, Tablero, NuevoScore1, NuevoScore2) :-
     separar_tablero(Tablero, Casas1, Casas2),

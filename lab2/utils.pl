@@ -51,7 +51,7 @@ separar_tablero([C1,C2,C3,C4,C5,C6|T], Casas1, Casas2) :-
 % Carga Estado = estado(Jugador1,Jugador2,Tablero,Score1,Score2,Turno) desde saves/estado.txt
 cargar(Estado, Visual):-
     gr_pregunta(Visual, 'Nombre del archivo a guardar?', Nombre),
-    string_concat(Nombre, '.txt', Nombre_Archivo),
+    string_concat(Nombre, '.j', Nombre_Archivo),
     string_concat('saves/', Nombre_Archivo, Path_Archivo),
     open(Path_Archivo,read,In),
     read_line_to_codes(In,Estado),
@@ -60,7 +60,7 @@ cargar(Estado, Visual):-
 % Guarda Estado = estado(Jugador1,Jugador2,Tablero,Score1,Score2,Turno) en saves/estado.txt
 guardar(Estado, Visual):-
     gr_pregunta(Visual, 'Nombre del archivo a guardar?', Nombre),
-    string_concat(Nombre, '.txt', Nombre_Archivo),
+    string_concat(Nombre, '.j', Nombre_Archivo),
     string_concat('saves/', Nombre_Archivo, Path_Archivo),
     open(Path_Archivo,write,Out),
     write(Out,Estado),
