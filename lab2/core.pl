@@ -1,8 +1,8 @@
 :- module(core,
 [
   % PREDICADOS PRINCIPALES
-  movimiento/4, % +Casa, +Tablero, -Nuevo_Tablero, -Final
-  % Realiza el movimiento producto de sacar las semillas de Casa y repartirlas en las siguientes
+  movimiento/5, % +Casa, +Tablero, +Jugador, -Nuevo_Tablero, -Final
+  % Realiza el movimiento producto de sacar las semillas de Casa y repartirlas en las siguientes para el turno correspondiente al Jugador
   recoger_semillas/8, % +CasilleroFinal, +Jugador, +Tablero, -NuevoTablero, +Score1, -NuevoScore1, +Score2, -NuevoScore2 
   % Realiza la recogida producto de levantar las semillas en CasilleroFinal, devolviendo los puntajes y el tablero actualizado
   comprobar_validez/2 % +Turno, +Tablero
@@ -12,9 +12,16 @@
 :- use_module(utils).
 
 % PREDICADOS PRINCIPALES
-  
-movimiento(Casa, Tablero, NuevoTablero, Final) :-
+movimiento(Casa, Tablero, jugador1, NuevoTablero, Final) :-
     convertir_a_indice(Casa, Indice),
+    Indice >= 6,
+    nth0(Indice, Tablero, Semillas),
+    Semillas > 0,
+    reemplazar(Indice, 0, Tablero, TableroActual),
+    repartir_semillas(Indice, TableroActual, NuevoTablero, Semillas, Final).
+movimiento(Casa, Tablero, jugador2, NuevoTablero, Final) :-
+    convertir_a_indice(Casa, Indice),
+    Indice < 6,
     nth0(Indice, Tablero, Semillas),
     Semillas > 0,
     reemplazar(Indice, 0, Tablero, TableroActual),
