@@ -12,17 +12,16 @@ iniciar_maquina(Depth, Turno, Tablero, Score1, Score2, CasaElegida) :-
 
 % Paso base
 minimax(0, _Turno, _Tablero, Score1, Score2, _CasaElegida, HeuristicValue) :-
-  heuristic_value(Score1, Score2, HeuristicValue).
+  heuristic_value(Score1, Score2, HeuristicValue), !.
 minimax(_Depth, _Turno, _Tablero, Score1, Score2, _CasaElegida, HeuristicValue) :-
   terminal_node(Score1, Score2),
-  heuristic_value(Score1, Score2, HeuristicValue).
+  heuristic_value(Score1, Score2, HeuristicValue), !.
 
 % Paso Inductivo
 minimax(Depth, Turno, Tablero, Score1, Score2, CasaElegida, HeuristicValue) :-
   posibles_casas(Turno, Casas),
   mejor_casa(Casas, Depth, Turno, Tablero, Score1, Score2, CasaElegida, HeuristicValue).
 
-% Paso base para elegir la mejor casa
 mejor_casa([ Casa ], Depth, Turno, Tablero, Score1, Score2, Casa, HeuristicValue) :-
   (
     realizar_movimiento(Casa, Tablero, Turno, Score1, Score2, NuevoScore1, NuevoScore2, NuevoTablero) ->

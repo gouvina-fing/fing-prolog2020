@@ -63,7 +63,6 @@ process_command(click(Casa),Visual,Jugador1,Jugador2,Turno,Tablero,Score1,Score2
         ->
         (
             recoger_semillas(CasilleroFinal, Turno, NuevoTablero, NuevoTablero2, Score1, NuevoScore1, Score2, NuevoScore2),
-            writeln(Tablero),
             (
                 comprobar_validez(Turno,NuevoTablero2)
                 -> 
