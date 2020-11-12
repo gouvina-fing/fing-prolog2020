@@ -57,23 +57,18 @@ mejor_casa([ Casa| CasasRestantes ], Depth, Turno, Tablero, Score1, Score2, Casa
 
 elegir_mejor_casa(Casa1, HeuristicValue1, _Casa2, HeuristicValue2, Turno, Casa1, HeuristicValue1) :-
   is_maximizing(Turno),
-  HeuristicValue1 >= HeuristicValue2, !.
+  HeuristicValue1 > HeuristicValue2, !
+  ;
+  \+is_maximizing(Turno),
+  HeuristicValue1 < HeuristicValue2, !.
 
-elegir_mejor_casa(_Casa1, HeuristicValue1, Casa2, HeuristicValue2, Turno, Casa2, HeuristicValue2) :-
-  is_maximizing(Turno),
-  HeuristicValue2 >= HeuristicValue1, !.
 
-elegir_mejor_casa(Casa1, HeuristicValue1, _Casa2, HeuristicValue2, _Turno, Casa1, HeuristicValue1) :-
-  HeuristicValue2 >= HeuristicValue1, !.
+elegir_mejor_casa(_Casa1, _HeuristicValue1, Casa2, HeuristicValue2, Turno, Casa2, HeuristicValue2).
 
-elegir_mejor_casa(_Casa1, _HeuristicValue1, Casa2, HeuristicValue2, _Turno, Casa2, HeuristicValue2).
+devolver_peor_val_heuristica(Turno, -9999) :-
+  is_maximizing(Turno).
 
-devolver_peor_val_heuristica(Turno, PeorValor) :-
-  is_maximizing(Turno),
-  PeorValor is -9999.
-
-devolver_peor_val_heuristica(_Turno, PeorValor) :-
-  PeorValor is 9999.
+devolver_peor_val_heuristica(_Turno, 9999).
 
 % Siempre maximiza el jugador1
 is_maximizing(jugador1).
