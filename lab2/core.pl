@@ -87,7 +87,7 @@ quedan_movimientos_validos(jugador1, Tablero) :-
     SemillasJugador > 0.
 
 quedan_movimientos_validos(jugador2, Tablero) :-
-    separar_tablero(Tablero, _, Casa2),
+    separar_tablero(Tablero, _, Casas2),
     colapsar(Casas2, SemillasJugador),
     SemillasJugador > 0.
 
@@ -104,6 +104,7 @@ repartir_semillas(Final, Tablero, NuevoTablero, 0, Final) :-
     nth0(Final, Tablero, Semillas),
     reemplazar(Final, Semillas, Tablero, NuevoTablero).
 repartir_semillas(Indice, Tablero, NuevoTablero, Restantes, Final) :-
+    Restantes > 0,
     NuevoIndice is Indice + 1,
     ModuleIndice is NuevoIndice mod 12,
     NuevoRestantes is Restantes - 1,

@@ -8,7 +8,7 @@
 % El contenido de este archivo se puede modificar.
 
 % El predicado minimax_depth/1 define la recursión máxima a utilizar en el algoritmo minimax
-minimax_depth(2).
+minimax_depth(6).
 
 % owarelog(+Jugador1,+Jugador2)
 % Jugador1 y Jugador2 pueden ser los átomos humano o maquina.

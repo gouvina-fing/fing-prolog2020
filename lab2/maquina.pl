@@ -26,15 +26,15 @@ mejor_casa([ Casa ], Depth, Turno, Tablero, Score1, Score2, Casa, HeuristicValue
   (
     realizar_movimiento(Casa, Tablero, Turno, Score1, Score2, NuevoScore1, NuevoScore2, NuevoTablero) ->
     (
-      realizar_movimiento(Casa, Tablero, Turno, Score1, Score2, NuevoScore1, NuevoScore2, NuevoTablero),
       NewDepth is Depth - 1,
       cambiar_turno(Turno, NuevoTurno),
-      minimax(NewDepth, NuevoTurno, NuevoTablero, NuevoScore1, NuevoScore2, Casa, HeuristicValue), !
+      minimax(NewDepth, NuevoTurno, NuevoTablero, NuevoScore1, NuevoScore2, _, HeuristicValue)
     )
     ;
     (
       devolver_peor_val_heuristica(Turno, HeuristicValue)
-    ) 
+    ),
+    !
   ).
 
 mejor_casa([ Casa| CasasRestantes ], Depth, Turno, Tablero, Score1, Score2, CasaElegida, HeuristicValue) :-
@@ -57,14 +57,14 @@ mejor_casa([ Casa| CasasRestantes ], Depth, Turno, Tablero, Score1, Score2, Casa
 
 elegir_mejor_casa(Casa1, HeuristicValue1, _Casa2, HeuristicValue2, Turno, Casa1, HeuristicValue1) :-
   is_maximizing(Turno),
-  HeuristicValue1 > HeuristicValue2, !.
+  HeuristicValue1 >= HeuristicValue2, !.
 
 elegir_mejor_casa(_Casa1, HeuristicValue1, Casa2, HeuristicValue2, Turno, Casa2, HeuristicValue2) :-
   is_maximizing(Turno),
-  HeuristicValue2 > HeuristicValue1, !.
+  HeuristicValue2 >= HeuristicValue1, !.
 
 elegir_mejor_casa(Casa1, HeuristicValue1, _Casa2, HeuristicValue2, _Turno, Casa1, HeuristicValue1) :-
-  HeuristicValue2 > HeuristicValue1, !.
+  HeuristicValue2 >= HeuristicValue1, !.
 
 elegir_mejor_casa(_Casa1, _HeuristicValue1, Casa2, HeuristicValue2, _Turno, Casa2, HeuristicValue2).
 
