@@ -1,1 +1,1 @@
-estado(humano,humano,[0,2,2,2,8,14],[0,0,0,0,0,2],0,18,jugador2).
+estado(maquina,maquina,[0,0,0,0,1,0],[0,0,0,0,1,0],23,23,jugador2).

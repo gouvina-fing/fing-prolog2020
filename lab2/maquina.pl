@@ -46,11 +46,11 @@ mejor_casa([ Casa| CasasRestantes ], Depth, Turno, Tablero, Score1, Score2, Casa
       cambiar_turno(Turno, NuevoTurno),
       minimax(NewDepth, NuevoTurno, NuevoTablero, NuevoScore1, NuevoScore2, _, HeuristicValue1),
       mejor_casa(CasasRestantes, Depth, Turno, Tablero, Score1, Score2, Casa2, HeuristicValue2),
-      elegir_mejor_casa(Casa, HeuristicValue1, Casa2, HeuristicValue2, Turno, CasaElegida, HeuristicValue)
+      elegir_mejor_casa(Casa2, HeuristicValue2, Casa, HeuristicValue1, Turno, CasaElegida, HeuristicValue) % En caso de empate elige la casa con movimiento valido
     )
     ;
     (
-      mejor_casa(CasasRestantes, Depth, Turno, Tablero, Score1, Score1, CasaElegida, HeuristicValue)
+      mejor_casa(CasasRestantes, Depth, Turno, Tablero, Score1, Score2, CasaElegida, HeuristicValue)
     )
   ).
   

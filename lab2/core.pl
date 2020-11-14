@@ -73,7 +73,7 @@ comprobar_validez(jugador1, Tablero) :-
     colapsar(Tablero, SemillasTotales),
     (SemillasTotales =:= 0;
     (SemillasOponente > 0, SemillasJugador > 0)).
-comprobar_validez(jugador2, Tablero) :-
+comprobar_validez(jugador2, Tablero) :- % TODO: Remover esto
     separar_tablero(Tablero, Casas1, Casas2),
     colapsar(Casas2, SemillasJugador),
     colapsar(Casas1, SemillasOponente),
