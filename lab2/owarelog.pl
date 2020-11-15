@@ -38,7 +38,7 @@ loop(Visual,MsgCmd,Jugador1,Jugador2,Turno,Tablero,Score1,Score2) :-
     gr_dibujar_tablero(Visual,Tablero),
     sformat(Msg, '~w Jugador 1: ~w puntos. Jugador 2: ~w puntos. Turno de ~w', [MsgCmd,Score1,Score2,Turno]),
     gr_estado(Visual,Msg),
-    eshumano(Jugador1, Jugador2, Turno) -> 
+    es_humano(Jugador1, Jugador2, Turno) -> 
     (
         gr_evento(Visual,E),
         process_command(E,Visual,Jugador1,Jugador2,Turno,Tablero,Score1,Score2)
@@ -49,11 +49,19 @@ loop(Visual,MsgCmd,Jugador1,Jugador2,Turno,Tablero,Score1,Score2) :-
         process_command(click(CasaElegida),Visual,Jugador1,Jugador2,Turno,Tablero,Score1,Score2)
     ).
 
+% --------------------------
+% Loop de fin de partida
+% --------------------------
+
 loopFinal(Comando,Visual,MsgCmd,Jugador1,Jugador2,Turno,Tablero,Score1,Score2) :-
     gr_dibujar_tablero(Visual,Tablero),
     sformat(Msg, '~w Jugador 1: ~w puntos. Jugador 2: ~w puntos.', [MsgCmd,Score1,Score2]),
     gr_estado(Visual,Msg),
     process_command(Comando,Visual,Jugador1,Jugador2,Turno,Tablero,Score1,Score2).
+
+% --------------------------
+% Comandos gráficos
+% --------------------------
 
 process_command(click(Casa),Visual,Jugador1,Jugador2,Turno,Tablero,Score1,Score2) :-
     sformat(MsgCmd, 'Click en: ~w.', [Casa]),
@@ -64,7 +72,7 @@ process_command(click(Casa),Visual,Jugador1,Jugador2,Turno,Tablero,Score1,Score2
         (
             recoger_semillas(CasilleroFinal, Turno, NuevoTablero, NuevoTablero2, Score1, NuevoScore1, Score2, NuevoScore2),
             (
-                comprobar_validez(Turno,NuevoTablero2)
+                comprobar_validez(NuevoTablero2)
                 -> 
                 (
                     comprobar_fin_partida(Visual,MsgCmd,Jugador1,Jugador2,SiguienteTurno,NuevoTablero2,NuevoScore1,NuevoScore2)
@@ -92,6 +100,7 @@ process_command(click(Casa),Visual,Jugador1,Jugador2,Turno,Tablero,Score1,Score2
         )
     ).
 
+
 process_command(salir,Visual,Jugador1,Jugador2,Turno,Tablero,Score1,Score2):-
     (   gr_opciones(Visual, '¿Seguro?', ['Sí', 'No'], 'Sí')
     ->  true
@@ -111,6 +120,11 @@ process_command(cargar,Visual,_,_,_,_,_,_):-
     term_to_atom(estado(Jugador1,Jugador2,Casas1,Casas2,Score1,Score2,Turno), Estado),
     append(Casas1,Casas2,Tablero),
     loop(Visual,'Cargar.',Jugador1,Jugador2,Turno,Tablero,Score1,Score2).
+
+% --------------------------
+% Eventos finales
+% --------------------------
+
 process_command(empatar,Visual,Jugador1,Jugador2,Turno,Tablero,Score1,Score2):-
     (   gr_opciones(Visual, '¡Es un empate! ¿Quiere reiniciar el juego?', ['Sí', 'No'], 'Sí')
     ->  iniciar_juego(Visual,Jugador1,Jugador2)
@@ -126,6 +140,10 @@ process_command(ganar2,Visual,Jugador1,Jugador2,Turno,Tablero,Score1,Score2):-
     ->  iniciar_juego(Visual,Jugador1,Jugador2)
     ;   true
     ).
+
+% --------------------------
+% Otros predicados
+% --------------------------
 
 comprobar_fin_partida(Visual,MsgCmd,Jugador1,Jugador2,SiguienteTurno,NuevoTablero2,NuevoScore1,NuevoScore2) :-
     (NuevoScore1 is 24, NuevoScore2 is 24)

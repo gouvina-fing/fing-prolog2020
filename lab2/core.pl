@@ -1,21 +1,24 @@
 :- module(core,
 [
   % PREDICADOS PRINCIPALES
-  movimiento/5, % +Casa, +Tablero, +Jugador, -Nuevo_Tablero, -Final
+  movimiento/5, % +Casa, +Tablero, +Jugador, -NuevoTablero, -Final
   % Realiza el movimiento producto de sacar las semillas de Casa y repartirlas en las siguientes para el turno correspondiente al Jugador
   recoger_semillas/8, % +CasilleroFinal, +Jugador, +Tablero, -NuevoTablero, +Score1, -NuevoScore1, +Score2, -NuevoScore2 
   % Realiza la recogida producto de levantar las semillas en CasilleroFinal, devolviendo los puntajes y el tablero actualizado
-  comprobar_validez/2, % +Turno, +Tablero
+  comprobar_validez/1, % +Tablero
   % Comprueba si el tablero actual es valido dada la jugada anterior
   quedan_movimientos_validos/2, % +Turno, +Tablero
-  % Comprueba si quedan movimientos validos en el  tablero actual
+  % Comprueba si quedan movimientos validos en el tablero actual para el jugador Turno
   terminar_partida_invalida/5 %+Score1, +Score2, +Tablero, -NuevoScore1, -NuevoScore2
-  % Suma score finales de una partida invalida
+  % Suma puntajes finales de una partida sin jugadas validas restantes
 ]).
 
 :- use_module(utils).
 
-% PREDICADOS PRINCIPALES
+% --------------------------
+% Predicados principales
+% --------------------------
+
 movimiento(Casa, Tablero, jugador1, NuevoTablero, Final) :-
     convertir_a_indice(Casa, Indice),
     Indice < 6,
@@ -66,20 +69,13 @@ recoger_semillas(CasilleroFinal, jugador2, Tablero, NuevoTablero, Score1, Score1
         )
     ).
 
-comprobar_validez(jugador1, Tablero) :-
+comprobar_validez(Tablero) :-
     separar_tablero(Tablero, Casas1, Casas2),
-    colapsar(Casas2, SemillasOponente),
-    colapsar(Casas1, SemillasJugador),
+    colapsar(Casas1, Semillas1),
+    colapsar(Casas2, Semillas2),
     colapsar(Tablero, SemillasTotales),
     (SemillasTotales =:= 0;
-    (SemillasOponente > 0, SemillasJugador > 0)).
-comprobar_validez(jugador2, Tablero) :- % TODO: Remover esto
-    separar_tablero(Tablero, Casas1, Casas2),
-    colapsar(Casas2, SemillasJugador),
-    colapsar(Casas1, SemillasOponente),
-    colapsar(Tablero, SemillasTotales),
-    (SemillasTotales =:= 0;
-    (SemillasOponente > 0, SemillasJugador > 0)).
+    (Semillas1 > 0, Semillas2 > 0)).
 
 quedan_movimientos_validos(jugador1, Tablero) :-
     separar_tablero(Tablero, Casas1, _),
@@ -98,7 +94,9 @@ terminar_partida_invalida(Score1, Score2, Tablero, NuevoScore1, NuevoScore2) :-
     NuevoScore1 is Semillas1 + Score1,
     NuevoScore2 is Semillas2 + Score2.
 
-% PREDICADOS AUXILIARES
+% --------------------------
+% Predicados auxiliares
+% --------------------------
 
 repartir_semillas(Final, Tablero, NuevoTablero, 0, Final) :-
     nth0(Final, Tablero, Semillas),
